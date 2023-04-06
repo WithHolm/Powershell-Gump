@@ -158,6 +158,9 @@ function Invoke-GumpChoice {
                 for ($i = 0; $i -lt $view.Height; $i++) {
                     $itemIndex = $CurrentViewIndex[$i + $IShift]
                     
+                    $isAtTop = $AllItemsIndex.IndexOf($AllItemsIndex[$itemIndex]) -eq 0
+                    $isAtbottom = $AllItemsIndex.IndexOf($AllItemsIndex[$itemIndex]) -eq $AllItemsIndex.IndexOf($AllItemsIndex[-1])
+
                     if ($LimitedView)
                     {
                         if($i -eq 0 -and $AllItemsIndex.IndexOf($AllItemsIndex[$itemIndex]) -eq 0){

@@ -149,7 +149,7 @@ Enum GumpStreamType{
 
 class GumpConsoleZone {
     [string]$Name
-    [int]$index = $Global:Zones.count
+    [int]$index = $Global:GumpZones.count
     [int]$MaxHeight
     [int]$Height
     [int]$MinHeight

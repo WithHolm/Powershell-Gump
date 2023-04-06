@@ -16,10 +16,10 @@ function New-GumpConsoleZone {
         [switch]$Init
     )
     if ($Init) {
-        $Global:Zones = [ordered]@{}
+        $Global:GumpZones = [ordered]@{}
     }
 
-    if ($Global:Zones.Contains($Name)) {
+    if ($Global:GumpZones.Contains($Name)) {
         throw "Zone with name '$Name' already exists"
     }
 
@@ -27,9 +27,9 @@ function New-GumpConsoleZone {
         throw "Cannot create a resizable zone with a minimum height of 0"
     }
 
-    $Global:Zones.$Name = [GumpConsoleZone]@{
+    $Global:GumpZones.$Name = [GumpConsoleZone]@{
         Name       = $Name
-        index      = $Global:Zones.count
+        index      = $Global:GumpZones.count
         MaxHeight  = $Height
         Height     = $Height
         MinHeight  = $MinHeight
@@ -42,6 +42,6 @@ function New-GumpConsoleZone {
     }
     
     if ($Resizable) {
-        $Global:Zones.$Name.Height = 0
+        $Global:GumpZones.$Name.Height = 0
     }
 }

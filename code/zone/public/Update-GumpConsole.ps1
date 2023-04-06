@@ -2,7 +2,7 @@ function Update-GumpConsole {
     [CmdletBinding()]
     param ()
     
-    foreach ($Name in $Global:Zones.Keys) {
+    foreach ($Name in $Global:GumpZones.Keys) {
         $Zone = Get-GumpConsoleZone -Name $Name
     
         for ($i = 0; $i -lt $zone.Content.Count; $i++) {

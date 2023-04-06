@@ -2,7 +2,7 @@ using namespace System
 using namespace System.Drawing
 using namespace System.Collections.Generic
 
-$Global:Zones = [ordered]@{}
+$Global:GumpZones = [ordered]@{}
 $global:Gump_debug = $false
 $global:SupportsAnsi = $false
 

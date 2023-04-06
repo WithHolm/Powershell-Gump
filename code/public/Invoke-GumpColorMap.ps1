@@ -38,7 +38,7 @@ function Invoke-GumpColorMap {
         $bc_content = ($AllColorMatrix.$key  | ForEach-Object {
                 $col = $_
                 $Ansi = Get-GumpAnsiSequence -BackGroundColor $col
-                $color = [color]::FromName($col.ToString())
+                $color = [System.Drawing.Color]::FromName($col.ToString())
                 $content = "48;2;{0};{1};{2}" -f $Color.R, $Color.G, $Color.B
                 $str = Set-StringPad -String "$content" -Length $Stats.Maximum -PadType 'middle'
                 $Ansi + $str

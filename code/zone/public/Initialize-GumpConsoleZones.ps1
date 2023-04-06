@@ -4,12 +4,12 @@ function Initialize-GumpConsoleZones {
     param (
         [Switch]$Clear
     )
-    if ($Global:Zones.count -eq 0) {
+    if ($Global:GumpZones.count -eq 0) {
         Throw "No zones added. please add zones before Initializing"
     }
 
     #find zone that is reziable
-    $resizeKey = $Global:Zones.Keys.Where{ $Global:Zones.$_.Resizable }
+    $resizeKey = $Global:GumpZones.Keys.Where{ $Global:GumpZones.$_.Resizable }
     if (@($resizeKey).count -gt 1) {
         throw "There is more than one rezizable zone. can only handle 1 at the moment."
     }
@@ -18,13 +18,13 @@ function Initialize-GumpConsoleZones {
     $ConsoleHeight = [console]::WindowHeight - 1
 
     #the height of all zones combined
-    $AskingHeight = ($Global:Zones.Values | Measure-Object -sum MaxHeight).Sum
+    $AskingHeight = ($Global:GumpZones.Values | Measure-Object -sum MaxHeight).Sum
 
     #get either asked for height or whatever is avalible in console
     $UsingHeight = [math]::Min($AskingHeight, $ConsoleHeight)
 
     #Height left over 
-    $StaticHeight = ($Global:Zones.values | Where-Object { $_.resizable -eq $false } | Measure-Object -Sum height).sum
+    $StaticHeight = ($Global:GumpZones.values | Where-Object { $_.resizable -eq $false } | Measure-Object -Sum height).sum
 
     #if dynamic height is set
     if ($resizeKey) {
@@ -75,7 +75,7 @@ function Initialize-GumpConsoleZones {
         }
     }
 
-    $zone_keys_desc = $Global:Zones.keys[($Global:Zones.count - 1)..0]
+    $zone_keys_desc = $Global:GumpZones.keys[($Global:GumpZones.count - 1)..0]
 
     $currentY = [Console]::GetCursorPosition().Item2
     foreach ($ZoneName in $zone_keys_desc ) {
@@ -119,5 +119,5 @@ function Initialize-GumpConsoleZones {
         $currentY = $y
     }
     #go to bottom
-    [console]::SetCursorPosition(0, ($Global:Zones[$zone_keys_desc[0]].y[1] + 1 ))
+    [console]::SetCursorPosition(0, ($Global:GumpZones[$zone_keys_desc[0]].y[1] + 1 ))
 }

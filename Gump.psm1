@@ -2,7 +2,7 @@ using namespace System
 using namespace System.Drawing
 using namespace System.Collections.Generic
 
-$Global:Zones = [ordered]@{}
+$Global:GumpZones = [ordered]@{}
 $global:Gump_debug = $false
 $global:SupportsAnsi = $false
 
@@ -18,7 +18,7 @@ Enum GumpStreamType{
 
 class GumpConsoleZone {
     [string]$Name
-    [int]$index = $Global:Zones.count
+    [int]$index = $Global:GumpZones.count
     [int]$MaxHeight
     [int]$Height
     [int]$MinHeight

@@ -2,8 +2,8 @@ using namespace System.Drawing
 function Get-GumpAnsiSequence {
     [CmdletBinding()]
     param (
-        [GumpColor]$ForegroundColor,
-        [GumpColor]$BackGroundColor,
+        [System.Drawing.KnownColor]$ForegroundColor,
+        [System.Drawing.KnownColor]$BackGroundColor,
         [ValidateSet(
             'Bold',
             'Underline',
