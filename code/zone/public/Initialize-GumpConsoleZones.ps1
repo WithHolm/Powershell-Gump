@@ -1,3 +1,4 @@
+using namespace System.Collections.Generic
 #init console from global:zones
 function Initialize-GumpConsoleZones {
     [CmdletBinding()]
@@ -75,7 +76,12 @@ function Initialize-GumpConsoleZones {
         }
     }
 
-    $zone_keys_desc = $Global:GumpZones.keys[($Global:GumpZones.count - 1)..0]
+    #do the zones in reverse order
+    $zone_keys_desc = [List[string]]::new() 
+    $Global:GumpZones.GetEnumerator()|ForEach-Object{
+        $zone_keys_desc.add($_.key)
+    }
+    $zone_keys_desc.Reverse()
 
     $currentY = [Console]::GetCursorPosition().Item2
     foreach ($ZoneName in $zone_keys_desc ) {
@@ -86,7 +92,7 @@ function Initialize-GumpConsoleZones {
             continue
         }
 
-        1..($zone.Height) | % {
+        1..($zone.Height) | ForEach-Object {
             $y = $currentY - $_
             if ($global:Gump_debug) {
                 write-GumpConsole -y $y -Text "$y - $_ $ZoneName $($zone.Height)"

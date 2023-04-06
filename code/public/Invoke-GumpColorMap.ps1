@@ -19,13 +19,15 @@ function Invoke-GumpColorMap {
 
     New-GumpConsoleZone -name 'header' -Height 1 -Init
     New-GumpConsoleZone -name 'verbose' -Height 1
-    $AllColorMatrix.Keys | % {
-        New-GumpConsoleZone -Name "$_-fc" -Height 1
-        New-GumpConsoleZone -Name "$_-bc" -Height 1
+    $AllColorMatrix.Keys | ForEach-Object {
+        $key = $_
+        New-GumpConsoleZone -Name "$key-fc" -Height 1
+        New-GumpConsoleZone -Name "$key-bc" -Height 1
     }
+
     Initialize-GumpConsoleZones -Clear
 
-    $AllColorMatrix.Keys | % {
+    $AllColorMatrix.Keys | ForEach-Object {
         $key = $_
         $fc_content = ($AllColorMatrix.$key | ForEach-Object {
                 $col = $_
@@ -50,4 +52,4 @@ function Invoke-GumpColorMap {
     Update-GumpConsole
 }
 
-# Invoke-GumpColorMap -Verbose
+# Invoke-GumpColorMap
