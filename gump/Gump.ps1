@@ -4,7 +4,7 @@ using namespace System.Collections.Generic
 
 $Global:GumpZones = [ordered]@{}
 $global:Gump_debug = $false
-$global:SupportsAnsi = $false
+$global:gump_supportsAnsi = $false
 
 
 

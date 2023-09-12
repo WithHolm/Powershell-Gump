@@ -11,11 +11,12 @@ function Get-GumpAnsiSequence {
             'strikethrough',
             "Blink"
         )]
-        [string[]]$Mode
+        [string[]]$Mode,
+        [switch]$Reset
     )
     
     begin {
-        if(!$global:SupportsAnsi){
+        if(!$global:gump_supportsAnsi){
             return ""
         }
     }
@@ -23,9 +24,11 @@ function Get-GumpAnsiSequence {
     process {
 
         #return reset code
-        if (!$ForegroundColor -and !$BackGroundColor -and !$Mode) {
+        if($reset){
             return "`e[0m"
         }
+        # if (!$ForegroundColor -and !$BackGroundColor -and !$Mode) {
+        # }
 
         $modes = @()
         if ($ForegroundColor) {

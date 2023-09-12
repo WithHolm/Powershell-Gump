@@ -30,7 +30,10 @@ $job = $dataset | Foreach-Object -ThrottleLimit 3 -AsJob -Parallel {
     $process.Id = $PSItem.Id
     $process.Activity = "Id $($PSItem.Id) starting"
     $process.Status = "Processing"
-    Write-progress @process
+    $record = [System.Management.Automation.ProgressRecord]::new($process.Id, $process.Activity, $process.Status)
+    $record.RecordType = [System.Management.Automation.ProgressRecordType]::Processing
+    $PSCmdlet.WriteProgress($record)
+    # Write-progress @process
     # Fake workload start up that takes x amount of time to complete
     start-sleep -Milliseconds ($PSItem.wait*5)
 
@@ -39,17 +42,32 @@ $job = $dataset | Foreach-Object -ThrottleLimit 3 -AsJob -Parallel {
     foreach ($percent in 1..100)
     {
         # Update process on status
-        $process.Status = "Handling $percent/100"
-        Write-host $process.Status
-        $process.PercentComplete = (($percent / 100) * 100)
-        Write-progress @process
+        $record.Status = "Handling $percent/100"
+        Write-host $record.Status
+        $record.PercentComplete = (($percent / 100) * 100)
+        $PSCmdlet.WriteProgress($record)
+        # Write-progress @process
         # Fake workload that takes x amount of time to complete
         Start-Sleep -Milliseconds $PSItem.Wait
     }
 
     # Mark process as completed
-    $process.Completed = $true
-    Write-progress @process
+    $record.RecordType  = [System.Management.Automation.ProgressRecordType]::Completed 
+    $PSCmdlet.WriteProgress($record)
 }
 
-$job|Invoke-GumpSpin -WriteJobInfo Information -Spinner 'dots'
+while ($job.State -eq 'Running')
+{
+    #read childjob progress
+
+    $job.ChildJobs|%{
+        # $_.State
+        if ($_.Progress)
+        {
+            Write-host $_.Progress
+        }
+    }
+    # $job | Receive-Job -Wait -AutoRemoveJob
+    Start-Sleep -Milliseconds 100
+}
+# $job|Invoke-GumpSpin -WriteJobInfo Information -Spinner 'dots'

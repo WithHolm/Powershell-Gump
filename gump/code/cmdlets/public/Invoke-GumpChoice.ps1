@@ -25,7 +25,7 @@ function Invoke-GumpChoice {
         $Select,
         [string]$Message,
         [switch]$EnableFilter,
-        [GumpColor]$ChoiceColor = [GumpColor]::DarkSalmon,
+        [System.Drawing.KnownColor]$ChoiceColor = [System.Drawing.KnownColor]::DarkSalmon,
 
         [ValidateNotNullOrEmpty()]
         [ValidateLength(1, 1)]
@@ -37,15 +37,13 @@ function Invoke-GumpChoice {
     )
     
     begin {
-        # $Tui = [GumpTui]::new()
-        $reset = (Get-GumpAnsiSequence)
+        $reset = Get-GumpAnsiSequence -Reset
 
         #color of selector and line currently active
         $SelectionColor = Get-GumpAnsiSequence -ForegroundColor $ChoiceColor
         $FilterColor = Get-GumpAnsiSequence -ForeGroundColor BurlyWood
 
         #items to list
-        # $items = @{}
         $items = [Collections.Generic.List[hashtable]]::new()
     }
     
@@ -75,7 +73,7 @@ function Invoke-GumpChoice {
             if ($EnableFilter) {
                 New-GumpConsoleZone -Name 'Filter' -Height 1
             }
-            New-GumpConsoleZone -Name 'view' -Height $items.count -Resizable -MinHeight 5
+            New-GumpConsoleZone -Name 'view' -Height $items.count -Resizable -MinHeight 2
             New-GumpConsoleZone -Name 'help' -Height 1 
             New-GumpConsoleZone -Name 'verbose' -Height 1 -StreamType verbose
             Initialize-GumpConsoleZones
@@ -155,15 +153,30 @@ function Invoke-GumpChoice {
                 #>
                 #render all lines.. current view items index..
                 $IShift = 0
+                # for each row in view, going from top to bottom
+                for ($i = 0; $i -lt $view.Height; $i++) {
+                    
+
+
+                }
+
+
+
+
+
+
                 for ($i = 0; $i -lt $view.Height; $i++) {
                     $itemIndex = $CurrentViewIndex[$i + $IShift]
-                    
-                    $isAtTop = $AllItemsIndex.IndexOf($AllItemsIndex[$itemIndex]) -eq 0
-                    $isAtbottom = $AllItemsIndex.IndexOf($AllItemsIndex[$itemIndex]) -eq $AllItemsIndex.IndexOf($AllItemsIndex[-1])
+                    # try{
+                    #     $isAtTop = $AllItemsIndex.IndexOf($AllItemsIndex[$itemIndex]) -eq 0
+                    #     $isAtbottom = $AllItemsIndex.IndexOf($AllItemsIndex[$itemIndex]) -eq $AllItemsIndex.IndexOf($AllItemsIndex[-1])
+                    # }
+                    # catch{
+                    #     throw "itemindex-index: $($i + $IShift) itemindex: $itemIndex, i: $i, ishift: $IShift, currentviewindex: $($CurrentViewIndex), allitemsindex: $($AllItemsIndex)"
+                    # }
 
-                    if ($LimitedView)
-                    {
-                        if($i -eq 0 -and $AllItemsIndex.IndexOf($AllItemsIndex[$itemIndex]) -eq 0){
+                    if ($LimitedView) {
+                        if ($i -eq 0 -and $AllItemsIndex.IndexOf($AllItemsIndex[$itemIndex]) -eq 0) {
                             $itemsAboveCount = $AllItemsIndex.IndexOf($AllItemsIndex[$itemIndex])
                             $content = "   ...$itemsAboveCount..."
                             #get count of how many items there are in between the first item of currentviewindex and the first item of allitemsindex
@@ -174,13 +187,13 @@ function Invoke-GumpChoice {
                         }
                     }
 
-                    $Line = $($showItems.where{$_.id -eq $itemIndex}).content
+                    $Line = $($showItems.where{ $_.id -eq $itemIndex }).content
                     
                 }
 
                 for ($i = 0; $i -lt $CurrentViewIndex.Count; $i++) {
                     $itemIndex = $CurrentViewIndex[$i]
-                    $Line = $($showItems.where{$_.id -eq $i}).content
+                    $Line = $($showItems.where{ $_.id -eq $i }).content
 
                     #either write line wouthout selector and color or write one with
                     $prepend = $reset + "  "
@@ -195,22 +208,6 @@ function Invoke-GumpChoice {
                     $OutputLine = $prepend + $line
 
                     Set-GumpConsoleZone -Name 'view' -Content $OutputLine -StartIndex $i
-                }
-
-                if ($LimitedView) {
-                    $prepend = "   "
-                    # if ($multiSelect) { $prepend += "   " }
-                    #set top dots if min index is not viewed
-                    if ($CurrentViewIndex[0] -ne 0) {
-                        Set-GumpConsoleZone -name 'view' -Content "$prepend...$($CurrentViewIndex[0] - 1)..." -StartIndex 0
-                        # write-GumpConsole -y $ViewTop -Text "$prepend..."
-                    }
-                    
-                    #set bottom dots if max index is not viewed
-                    if ($CurrentViewIndex[-1] -ne $AllItemsIndex[-1]) {
-                        Set-GumpConsoleZone -name 'view' -Content "$prepend...$($AllItemsIndex[-1] - $CurrentViewIndex[-1])..." -StartIndex ($CurrentViewIndex.count - 1)
-                        # write-GumpConsole -y $ViewBottom -Text "$prepend..."
-                    }
                 }
                 
                 $ActiveItemIndex = $NextActiveItemIndex

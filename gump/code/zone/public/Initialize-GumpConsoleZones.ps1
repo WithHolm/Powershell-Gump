@@ -3,7 +3,8 @@ using namespace System.Collections.Generic
 function Initialize-GumpConsoleZones {
     [CmdletBinding()]
     param (
-        [Switch]$Clear
+        [Switch]$Clear,
+        [switch]$nonstatic
     )
     if ($Global:GumpZones.count -eq 0) {
         Throw "No zones added. please add zones before Initializing"
@@ -21,14 +22,16 @@ function Initialize-GumpConsoleZones {
     #the height of all zones combined
     $AskingHeight = ($Global:GumpZones.Values | Measure-Object -sum MaxHeight).Sum
 
+    #
     #get either asked for height or whatever is avalible in console
     $UsingHeight = [math]::Min($AskingHeight, $ConsoleHeight)
 
-    #Height left over 
+    #Height of all static elements
     $StaticHeight = ($Global:GumpZones.values | Where-Object { $_.resizable -eq $false } | Measure-Object -Sum height).sum
 
     #if dynamic height is set
     if ($resizeKey) {
+
         $zone = Get-GumpConsoleZone -Name $resizeKey
         $NewHeight = ($UsingHeight - $StaticHeight)
 
@@ -49,7 +52,8 @@ function Initialize-GumpConsoleZones {
     }
 
     if ($Throw_TooSmall) {
-        Throw "Your console is too small to fit the view i want to show you. please resize you your console and try again (missing $Throw_TooSmall_size console lines)"
+        # Write-Host "static height: $StaticHeight, dynamic height: $NewHeight, console height: $ConsoleHeight"
+        Throw "Your console is too small to fit the view i want to show you. please resize you your console and try again (missing $Throw_TooSmall_size console lines) (static height: $StaticHeight, using height: $UsingHeight, dynamic height: $NewHeight, console height: $ConsoleHeight)"
     }
 
     if ($Clear) {

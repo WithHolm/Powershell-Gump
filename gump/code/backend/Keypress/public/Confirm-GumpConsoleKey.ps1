@@ -63,6 +63,10 @@ function Confirm-GumpConsoleKey {
             'spacebar'
         )]
         [string[]]$Keys,
+        
+        [parameter(
+            ValueFromPipeline
+        )]
         [ConsoleKeyInfo]$Keypress
     )
 
@@ -72,7 +76,7 @@ function Confirm-GumpConsoleKey {
             break
         }
         'a-z' {
-            $test = ($Keypress.Key -in ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' | ForEach-Object { [ConsoleKey]$_ }))
+            $test = $Keypress.KeyChar -in 'a'..'z'
             break
         }
         '*' {
@@ -92,5 +96,5 @@ function Confirm-GumpConsoleKey {
         return $false
     }
     return $keypress
-    
 }
+

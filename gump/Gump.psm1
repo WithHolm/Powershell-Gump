@@ -4,7 +4,7 @@ using namespace System.Collections.Generic
 
 $Global:GumpZones = [ordered]@{}
 $global:Gump_debug = $false
-$global:SupportsAnsi = $false
+$global:gump_supportsAnsi = $false
 
 Enum GumpStreamType{
     host
@@ -36,4 +36,4 @@ Get-ChildItem "$PSScriptRoot\code\*.ps1" -Recurse|?{$_.BaseName -notlike '*.test
 }
 
 
-$global:SupportsAnsi = Test-GumpAnsi
+$global:gump_supportsAnsi = Test-GumpAnsi

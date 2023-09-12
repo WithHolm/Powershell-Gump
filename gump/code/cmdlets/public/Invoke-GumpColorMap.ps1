@@ -1,6 +1,8 @@
 function Invoke-GumpColorMap {
     [CmdletBinding()]
-    param()
+    param(
+        $Style
+    )
     $AllColors = [enum]::GetNames([GumpColor]) 
     $Stats = $AllColors | Measure-Object -Property length -AllStats
     $Screenwidth = [Console]::WindowWidth
