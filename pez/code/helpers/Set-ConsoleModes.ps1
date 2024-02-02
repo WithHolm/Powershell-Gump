@@ -16,7 +16,9 @@ function Set-ConsoleModes {
     param(
         [ValidateSet(
             'EnableCursor',
-            'DisableCursor'
+            'DisableCursor',
+            'SetConsoleEncoding-utf8',
+            'RevertConsoleEncoding'
         )]
         [string[]]$Modes
     )
@@ -27,6 +29,13 @@ function Set-ConsoleModes {
         }
         'DisableCursor' {
             [Console]::CursorVisible = $false
+        }
+        'SetConsoleEncoding-utf8' {
+            $global:_ConsoleOutputEncoding = [Console]::OutputEncoding
+            [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+        }
+        'RevertConsoleEncoding' {
+            [Console]::OutputEncoding = $global:_ConsoleOutputEncoding
         }
     }
 }

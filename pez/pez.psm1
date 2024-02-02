@@ -1,0 +1,1 @@
+gci "$PSScriptRoot/code/*.ps1" -Exclude "*.tests.*" -Recurse | % { . $_.FullName }

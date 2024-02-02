@@ -1,6 +1,7 @@
 #export:core
 function Get-PezViewChildren {
     [CmdletBinding()]
+    [OutputType('PezViewItem')]
     param (
         [parameter(
             Mandatory,

@@ -1,0 +1,1 @@
+gci "$PSScriptRoot/code/*.ps1" -Recurse | % { . $_.FullName }
